@@ -20,3 +20,8 @@ hit_df = hitzee(input_dir, annot_dir, output_file)
 
 hit_df.head()
 ```
+
+input_dir should contain csv files
+
+annot_dir should contain txt files
+
