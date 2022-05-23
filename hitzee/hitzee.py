@@ -2,7 +2,13 @@ import os
 import re
 import numpy as np
 import pandas as pd
+import seaborn as sns
+from scipy.cluster.hierarchy import dendrogram, linkage, cut_tree
+import matplotlib.pyplot as plt
 
+#import loader.read_plates_data as read_plates_data
+#import loader.read_plates_annot as read_plates_annot
+from hitzee.loader import read_plates_data, read_plates_annot
 
 
 def z_score_standardization(series):
@@ -149,7 +155,7 @@ def get_batch_separation(plates_df, plates_annot_df=None, dendo_cut_sd=5, linkea
 
 
 
-def hitz(plates_df, plates_annot_df=None):
+def hitzee_norm(plates_df, plates_annot_df=None):
     
     plates_batch_df, plates_batch_annot_df = get_batch_separation(plates_df, plates_annot_df)
     
@@ -166,12 +172,20 @@ def hitz(plates_df, plates_annot_df=None):
 
 
 
-def hitz_load(input_dir, annot_dir=None, outfile=None):
+def hitzee(input_dir, annot_dir=None, outfile=None):
+    """
+    Take all csv files from input_dir and txt files from annot_dir (if available) and \
+    calculates position based normalization for plate-based read-outs.
+    Batch clustering is performed before normalization.
+    """
+    
+    plates_df = read_plates_data(input_dir)
     
     if annot_dir is not None:
-        hits_df = hitz(plates_df, plates_annot_df)
+        plates_annot_df = read_plates_annot(annot_dir, rowcol=plates_df.index)
+        hits_df = hitzee_norm(plates_df, plates_annot_df)
     else:
-        hits_df = hitz(plates_df)
+        hits_df = hitzee_norm(plates_df)
         
     if outfile is not None:
         hits_df.to_csv(outfile)
