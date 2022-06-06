@@ -10,7 +10,7 @@ To run:
 ```
 python
 
-import hitzee
+from hitzee import hitzee
 
 input_dir = 'path/to/assay/values/'
 annot_dir = 'path/to/assay/annotations/'
